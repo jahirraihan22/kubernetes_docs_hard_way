@@ -1,18 +1,35 @@
 #! /bin/bash
 
-POD_CIDR=10.244.0.0/16
-SERVICE_CIDR=10.96.0.0/16
-LOADBALANCER=192.168.56.30
-MASTER_1=192.168.56.11
-MASTER_2=192.168.56.12
+# Check if the script is being run as root
+if [[ $(id -u) -ne 0 ]]; then
+  echo "Please run this script as root."
+sleep 2
+  
+  exit 1
+fi
+
+
+envPath=$(echo "$0" | sed "s/\/[^/]*$/\/\.env/")
+sleep 2
+
+
+if [[ -e "$envPath" ]]; then
+    source $envPath
+else
+    echo ".env is required.....exiting"
+sleep 2
+    
+    exit 1
+fi
+
+####################################### end checking
 INTERNAL_IP=$(ip addr show enp0s8 | grep "inet " | awk '{print $2}' | cut -d / -f 1)
 
-
 wget -q --show-progress --https-only --timestamping \
-  "https://storage.googleapis.com/kubernetes-release/release/v1.27.0/bin/linux/amd64/kube-apiserver" \
-  "https://storage.googleapis.com/kubernetes-release/release/v1.27.0/bin/linux/amd64/kube-controller-manager" \
-  "https://storage.googleapis.com/kubernetes-release/release/v1.27.0/bin/linux/amd64/kube-scheduler" \
-  "https://storage.googleapis.com/kubernetes-release/release/v1.27.0/bin/linux/amd64/kubectl"
+  "https://storage.googleapis.com/kubernetes-release/release/v$KUBE_APISERVCER_VERSION/bin/linux/amd64/kube-apiserver" \
+  "https://storage.googleapis.com/kubernetes-release/release/v$KUBEC_CONTROLLER_VERSION/bin/linux/amd64/kube-controller-manager" \
+  "https://storage.googleapis.com/kubernetes-release/release/v$KUBE_SCHEDULER_VERSION/bin/linux/amd64/kube-scheduler" \
+  "https://storage.googleapis.com/kubernetes-release/release/v$KUBECTL_VERSION/bin/linux/amd64/kubectl"
 
 
  chmod +x kube-apiserver kube-controller-manager kube-scheduler kubectl
@@ -134,6 +151,6 @@ sudo chmod 600 /var/lib/kubernetes/*.kubeconfig
 sudo systemctl daemon-reload
 sudo systemctl enable kube-apiserver kube-controller-manager kube-scheduler
 sudo systemctl start kube-apiserver kube-controller-manager kube-scheduler
-
+sleep 5
 kubectl get componentstatuses --kubeconfig admin.kubeconfig
 
