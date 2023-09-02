@@ -41,7 +41,7 @@ wget -q --show-progress --https-only --timestamping \
   sudo cp ca.crt ca.key /var/lib/kubernetes/pki
   for c in kube-apiserver service-account apiserver-kubelet-client etcd-server kube-scheduler kube-controller-manager
   do
-    sudo mv "$c.crt" "$c.key" /var/lib/kubernetes/pki/
+    sudo cp "$c.crt" "$c.key" /var/lib/kubernetes/pki/
   done
   sudo chown root:root /var/lib/kubernetes/pki/*
   sudo chmod 600 /var/lib/kubernetes/pki/*
