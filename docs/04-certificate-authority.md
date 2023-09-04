@@ -1,3 +1,5 @@
+<!-- @format -->
+
 # Provisioning a CA and Generating TLS Certificates
 
 In this lab you will provision a [PKI Infrastructure](https://en.wikipedia.org/wiki/Public_key_infrastructure) using the popular openssl tool, then use it to bootstrap a Certificate Authority, and generate TLS certificates for the following components: etcd, kube-apiserver, kube-controller-manager, kube-scheduler, kubelet, and kube-proxy.
@@ -8,7 +10,7 @@ You can do these on any machine with `openssl` on it. But you should be able to 
 
 In our case we do the following steps on the `master-1` node, as we have set it up to be the administrative client.
 
-[//]: # (host:master-1)
+[//]: # "host:master-1"
 
 ## Certificate Authority
 
@@ -53,7 +55,6 @@ The output should look like this. If you changed any of the defaults mentioned i
 
 Create a CA certificate, then generate a Certificate Signing Request and use it to create a private key:
 
-
 ```bash
 {
   # Create private key for CA
@@ -69,6 +70,7 @@ Create a CA certificate, then generate a Certificate Signing Request and use it 
   openssl x509 -req -in ca.csr -signkey ca.key -CAcreateserial  -out ca.crt -days 1000
 }
 ```
+
 Results:
 
 ```
@@ -142,11 +144,9 @@ kube-controller-manager.key
 kube-controller-manager.crt
 ```
 
-
 ### The Kube Proxy Client Certificate
 
 Generate the `kube-proxy` client certificate and private key:
-
 
 ```bash
 {
@@ -170,8 +170,6 @@ kube-proxy.crt
 ### The Scheduler Client Certificate
 
 Generate the `kube-scheduler` client certificate and private key:
-
-
 
 ```bash
 {
@@ -280,7 +278,6 @@ Results:
 apiserver-kubelet-client.crt
 apiserver-kubelet-client.key
 ```
-
 
 ### The ETCD Server Certificate
 
